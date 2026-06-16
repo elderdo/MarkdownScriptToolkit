@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Resolve repository paths once so this script works from any current directory.
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 config_file="$repo_root/.markdownlint.json"
 apply_fix=false
 show_help=false
+# Keep user-provided paths in order; these can be files or directories.
 raw_targets=()
 
 action_usage() {
@@ -54,6 +56,7 @@ if [[ ! -f "$config_file" ]]; then
   exit 1
 fi
 
+# Verify markdownlint CLI is installed before doing any file discovery.
 if ! command -v markdownlint >/dev/null 2>&1; then
   echo "markdownlint was not found on PATH." >&2
   echo "Install it with: npm install -g markdownlint-cli" >&2
@@ -63,11 +66,13 @@ fi
 collect_markdown_files() {
   local target="$1"
 
+  # If target is a directory, gather all Markdown files recursively.
   if [[ -d "$target" ]]; then
     find "$target" -type f -name '*.md' -not -path '*/node_modules/*' -print
     return
   fi
 
+  # If target is a file, lint just that file.
   if [[ -f "$target" ]]; then
     printf '%s\n' "$target"
     return
@@ -78,6 +83,7 @@ collect_markdown_files() {
 
 markdown_files=()
 
+# No input paths means "lint the whole repository".
 if ((${#raw_targets[@]} == 0)); then
   while IFS= read -r file_path; do
     markdown_files+=("$file_path")
@@ -95,6 +101,7 @@ if ((${#markdown_files[@]} == 0)); then
   exit 1
 fi
 
+# Build arguments once, then run markdownlint in a single call.
 command_args=(--config "$config_file")
 if [[ "$apply_fix" == true ]]; then
   command_args+=(--fix)
