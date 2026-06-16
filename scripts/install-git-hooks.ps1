@@ -1,11 +1,14 @@
 [CmdletBinding()]
 param()
 
+# $PSScriptRoot is the directory containing this script file.
 # Find the repository root relative to this script file.
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 
 # Guardrail: this script only works inside an initialized git repository.
+# $null is PowerShell's null value; redirecting to it silences command output.
 & git -C $RepoRoot rev-parse --is-inside-work-tree *> $null
+# $LASTEXITCODE holds the native process exit code from the previous external command.
 if ($LASTEXITCODE -ne 0) {
     throw "This repo is not initialized with git yet: $RepoRoot. Run: git init"
 }

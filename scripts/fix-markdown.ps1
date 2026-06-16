@@ -2,11 +2,13 @@
 param(
     # Use -Fix to let markdownlint apply automatic corrections where supported.
     [switch]$Fix,
+    # ValueFromRemainingArguments captures every extra argument after named options.
     # Optional file or directory paths to lint. If omitted, the script lints the whole repo.
     [Parameter(ValueFromRemainingArguments = $true)]
     [string[]]$Path
 )
 
+# $PSScriptRoot is the folder of this .ps1 file, so path resolution works from any current directory.
 # Resolve repository paths once so the script can be run from any current directory.
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $ConfigFile = Join-Path $RepoRoot '.markdownlint.json'
@@ -76,11 +78,13 @@ $markdownFiles = New-Object System.Collections.Generic.List[string]
 if (-not $Path -or $Path.Count -eq 0) {
     Get-ChildItem -LiteralPath $RepoRoot -Recurse -File -Filter '*.md' |
         Where-Object { $_.FullName -notmatch '[\\/]node_modules[\\/]' } |
+        # [void] discards Add()'s return value so we only keep side effects.
         ForEach-Object { [void]$markdownFiles.Add($_.FullName) }
 }
 else {
     foreach ($target in $Path) {
         foreach ($file in Get-MarkdownFiles -Target $target) {
+            # [void] suppresses output from List.Add to keep pipeline output clean.
             [void]$markdownFiles.Add($file)
         }
     }

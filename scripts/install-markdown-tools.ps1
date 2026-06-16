@@ -1,9 +1,11 @@
 [CmdletBinding()]
 param(
+    # $PROFILE is PowerShell's current-user profile script path.
     # Where the helper function should be installed; defaults to the active PowerShell profile.
     [string]$ProfilePath = $PROFILE
 )
 
+# $PSScriptRoot is the directory where this installer script lives.
 # Compute repo paths so the profile function points at this toolkit.
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $RepoParent = Split-Path -Parent $RepoRoot
@@ -44,6 +46,7 @@ $Block = @"
 
 $StartMarker
 function fixmd {
+    # @args contains all arguments passed to this function; it forwards them as-is.
     & '$ProfileRepoRoot\scripts\fix-markdown.ps1' @args
 }
 $EndMarker

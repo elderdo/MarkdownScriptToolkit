@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param()
 
+# $PSScriptRoot points to this script's folder, independent of current location.
 # Build temporary paths used to test lint/fix behavior without touching repo files.
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $TempDirectory = Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid().ToString())
@@ -23,6 +24,7 @@ This paragraph starts after multiple blank lines.
 
     # First pass should fail because the temp file includes rule violations.
     & "$RepoRoot\scripts\fix-markdown.ps1" $TempFile
+    # $LASTEXITCODE contains the exit code from the external script call above.
     if ($LASTEXITCODE -eq 0) {
         throw 'Expected lint to fail before auto-fix, but it passed.'
     }
