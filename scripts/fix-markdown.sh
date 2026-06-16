@@ -24,7 +24,7 @@ Options:
 
 Examples:
   scripts/fix-markdown.sh
-  scripts/fix-markdown.sh setupForSetExampleProject.md pullRequests.md
+  scripts/fix-markdown.sh MarkdownDocs/setupForSetExampleProject.md MarkdownDocs/pullRequests.md
   scripts/fix-markdown.sh --fix scripts .
 EOF
 }

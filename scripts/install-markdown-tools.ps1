@@ -4,6 +4,14 @@ param(
 )
 
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+$RepoParent = Split-Path -Parent $RepoRoot
+$CanonicalRoot = Join-Path $RepoParent 'MarkdownScriptToolkit'
+$ProfileRepoRoot = $RepoRoot
+
+if (Test-Path -LiteralPath (Join-Path $CanonicalRoot 'scripts')) {
+    $ProfileRepoRoot = $CanonicalRoot
+}
+
 $StartMarker = '# >>> markdown-script-toolkit >>>'
 $EndMarker = '# <<< markdown-script-toolkit <<<'
 
@@ -30,7 +38,7 @@ $Block = @"
 
 $StartMarker
 function fixmd {
-    & '$RepoRoot\scripts\fix-markdown.ps1' @args
+    & '$ProfileRepoRoot\scripts\fix-markdown.ps1' @args
 }
 $EndMarker
 "@

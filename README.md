@@ -3,6 +3,15 @@
 This repository currently contains reusable Markdown lint helpers for the
 Markdown files in this folder.
 
+The example and transcript Markdown files live under `MarkdownDocs/` so the
+root stays focused on the toolkit itself.
+
+The open workspace folder is still named `GitHub` because Windows will not let
+VS Code rename a folder that is actively in use. To keep the toolkit name
+usable everywhere right now, this setup uses the sibling junction path
+`C:\Users\Douglas\Documents\C#\MarkdownScriptToolkit` as the canonical shell
+path.
+
 The repo is designed so you can:
 
 - lint one or more Markdown files from Bash or PowerShell
@@ -38,12 +47,12 @@ Git is also required if you want to use the local pre-commit hook.
 
 ```bash
 ./scripts/fix-markdown.sh
-./scripts/fix-markdown.sh --fix setupForSetExampleProject.md pullRequests.md
+./scripts/fix-markdown.sh --fix MarkdownDocs/setupForSetExampleProject.md MarkdownDocs/pullRequests.md
 ```
 
 ```powershell
 ./scripts/fix-markdown.ps1
-./scripts/fix-markdown.ps1 -Fix setupForSetExampleProject.md pullRequests.md
+./scripts/fix-markdown.ps1 -Fix MarkdownDocs/setupForSetExampleProject.md MarkdownDocs/pullRequests.md
 ```
 
 If you do not pass any paths, the scripts lint every `.md` file under the repo
@@ -96,7 +105,7 @@ Add this to `~/.bashrc`:
 
 ```bash
 fixmd() {
-  bash "/c/Users/Douglas/Documents/C#/GitHub/scripts/fix-markdown.sh" "$@"
+  bash "/c/Users/Douglas/Documents/C#/MarkdownScriptToolkit/scripts/fix-markdown.sh" "$@"
 }
 ```
 
@@ -110,7 +119,7 @@ After that, from any Git Bash terminal:
 
 ```bash
 fixmd
-fixmd --fix /c/Users/Douglas/Documents/C#/GitHub/setupForSetExampleProject.md
+fixmd --fix /c/Users/Douglas/Documents/C#/MarkdownScriptToolkit/MarkdownDocs/setupForSetExampleProject.md
 ```
 
 If you prefer not to edit the profile manually, run:
@@ -132,7 +141,7 @@ Add this function to your profile:
 
 ```powershell
 function fixmd {
-    & "C:\Users\Douglas\Documents\C#\GitHub\scripts\fix-markdown.ps1" @args
+  & "C:\Users\Douglas\Documents\C#\MarkdownScriptToolkit\scripts\fix-markdown.ps1" @args
 }
 ```
 
@@ -146,7 +155,7 @@ After that, from any PowerShell terminal:
 
 ```powershell
 fixmd
-fixmd -Fix C:\Users\Douglas\Documents\C#\GitHub\setupForSetExampleProject.md
+fixmd -Fix C:\Users\Douglas\Documents\C#\MarkdownScriptToolkit\MarkdownDocs\setupForSetExampleProject.md
 ```
 
 If you prefer not to edit the profile manually, run:

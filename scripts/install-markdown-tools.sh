@@ -2,6 +2,14 @@
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+repo_parent="$(cd "$repo_root/.." && pwd)"
+canonical_root="$repo_parent/MarkdownScriptToolkit"
+profile_repo_root="$repo_root"
+
+if [[ -d "$canonical_root/scripts" ]]; then
+  profile_repo_root="$canonical_root"
+fi
+
 profile_path="${HOME}/.bashrc"
 
 usage() {
@@ -55,7 +63,7 @@ cat >> "$profile_path" <<EOF
 
 $start_marker
 fixmd() {
-  bash "$repo_root/scripts/fix-markdown.sh" "\$@"
+  bash "$profile_repo_root/scripts/fix-markdown.sh" "\$@"
 }
 $end_marker
 EOF

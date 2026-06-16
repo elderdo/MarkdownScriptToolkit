@@ -6,7 +6,7 @@ These wrappers reuse the repo Markdown lint setup in [..\/.markdownlint.json](..
 
 ```bash
 ./scripts/fix-markdown.sh
-./scripts/fix-markdown.sh setupForSetExampleProject.md pullRequests.md
+./scripts/fix-markdown.sh MarkdownDocs/setupForSetExampleProject.md MarkdownDocs/pullRequests.md
 ./scripts/fix-markdown.sh --fix .
 ```
 
@@ -14,7 +14,7 @@ These wrappers reuse the repo Markdown lint setup in [..\/.markdownlint.json](..
 
 ```powershell
 ./scripts/fix-markdown.ps1
-./scripts/fix-markdown.ps1 setupForSetExampleProject.md pullRequests.md
+./scripts/fix-markdown.ps1 MarkdownDocs/setupForSetExampleProject.md MarkdownDocs/pullRequests.md
 ./scripts/fix-markdown.ps1 -Fix .
 ```
 

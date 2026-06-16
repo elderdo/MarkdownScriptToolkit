@@ -25,7 +25,7 @@ Options:
 
 Examples:
   ./scripts/fix-markdown.ps1
-  ./scripts/fix-markdown.ps1 setupForSetExampleProject.md pullRequests.md
+    ./scripts/fix-markdown.ps1 MarkdownDocs/setupForSetExampleProject.md MarkdownDocs/pullRequests.md
   ./scripts/fix-markdown.ps1 -Fix scripts .
 '@
 }
