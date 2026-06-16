@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+mapfile -t markdown_files < <(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.md$' || true)
+
+if ((${#markdown_files[@]} == 0)); then
+  exit 0
+fi
+
+cd "$repo_root"
+bash "$repo_root/scripts/fix-markdown.sh" "${markdown_files[@]}"
