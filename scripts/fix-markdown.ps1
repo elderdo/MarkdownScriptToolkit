@@ -1,10 +1,13 @@
 [CmdletBinding()]
 param(
+    # Use -Fix to let markdownlint apply automatic corrections where supported.
     [switch]$Fix,
+    # Optional file or directory paths to lint. If omitted, the script lints the whole repo.
     [Parameter(ValueFromRemainingArguments = $true)]
     [string[]]$Path
 )
 
+# Resolve repository paths once so the script can be run from any current directory.
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $ConfigFile = Join-Path $RepoRoot '.markdownlint.json'
 
@@ -39,6 +42,7 @@ if (-not (Test-Path -LiteralPath $ConfigFile)) {
     throw "markdownlint config not found: $ConfigFile"
 }
 
+# Verify the markdownlint CLI is installed and reachable on PATH.
 $markdownlint = Get-Command markdownlint -ErrorAction SilentlyContinue
 if (-not $markdownlint) {
     throw 'markdownlint was not found on PATH. Install it with: npm install -g markdownlint-cli'
@@ -55,6 +59,7 @@ function Get-MarkdownFiles {
         return @()
     }
 
+    # If a directory is passed, collect all Markdown files inside it recursively.
     $item = Get-Item -LiteralPath $Target
     if ($item.PSIsContainer) {
         return Get-ChildItem -LiteralPath $item.FullName -Recurse -File -Filter '*.md' |
@@ -67,6 +72,7 @@ function Get-MarkdownFiles {
 
 $markdownFiles = New-Object System.Collections.Generic.List[string]
 
+# Build the file list either from explicit paths or from the whole repo.
 if (-not $Path -or $Path.Count -eq 0) {
     Get-ChildItem -LiteralPath $RepoRoot -Recurse -File -Filter '*.md' |
         Where-Object { $_.FullName -notmatch '[\\/]node_modules[\\/]' } |
@@ -84,12 +90,14 @@ if ($markdownFiles.Count -eq 0) {
     throw 'No Markdown files found.'
 }
 
+# Compose markdownlint arguments in one place before executing the tool.
 $commandArgs = @('--config', $ConfigFile)
 if ($Fix) {
     $commandArgs += '--fix'
 }
 $commandArgs += $markdownFiles
 
+# Run from repo root so relative paths and config behavior are consistent.
 Push-Location $RepoRoot
 try {
     & $markdownlint.Source @commandArgs
