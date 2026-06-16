@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# BASH_SOURCE[0] is this script file path; HOME is the current user's home folder.
 # Compute repository paths so profile functions point to this toolkit.
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 repo_parent="$(cd "$repo_root/.." && pwd)"
@@ -12,6 +13,7 @@ if [[ -d "$canonical_root/scripts" ]]; then
   profile_repo_root="$canonical_root"
 fi
 
+# HOME is a shell variable for the current user's home directory.
 # Default to the user's Bash profile in Git Bash.
 profile_path="${HOME}/.bashrc"
 
@@ -28,14 +30,17 @@ Options:
 EOF
 }
 
+# $# is the number of arguments still available to parse.
 while (($# > 0)); do
   case "$1" in
     --profile)
+      # shift moves to the value that follows --profile.
       shift
       if (($# == 0)); then
         echo "Missing value for --profile" >&2
         exit 1
       fi
+      # $1 now holds the profile path value supplied after --profile.
       profile_path="$1"
       ;;
     -h|--help)
@@ -48,6 +53,7 @@ while (($# > 0)); do
       exit 1
       ;;
   esac
+  # Move on to the next command-line argument.
   shift
 done
 
@@ -69,6 +75,7 @@ cat >> "$profile_path" <<EOF
 
 $start_marker
 fixmd() {
+  # "$@" forwards every argument exactly as provided by the user.
   bash "$profile_repo_root/scripts/fix-markdown.sh" "\$@"
 }
 $end_marker

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# BASH_SOURCE[0] is the current script file path; this finds the repo root from it.
 # Resolve repository paths once so this script works from any current directory.
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 config_file="$repo_root/.markdownlint.json"
@@ -31,8 +32,10 @@ Examples:
 EOF
 }
 
+# $# is the number of command-line arguments still not processed.
 while (($# > 0)); do
   case "$1" in
+    # $1 is the current argument being examined.
     --fix)
       apply_fix=true
       ;;
@@ -43,6 +46,7 @@ while (($# > 0)); do
       raw_targets+=("$1")
       ;;
   esac
+  # shift discards $1 so the next argument becomes the new $1.
   shift
 done
 
@@ -84,6 +88,7 @@ collect_markdown_files() {
 markdown_files=()
 
 # No input paths means "lint the whole repository".
+# ${#raw_targets[@]} is the count of items stored in the raw_targets array.
 if ((${#raw_targets[@]} == 0)); then
   while IFS= read -r file_path; do
     markdown_files+=("$file_path")

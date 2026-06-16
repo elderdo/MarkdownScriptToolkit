@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# BASH_SOURCE[0] points to this script path, so temp tests can find repo scripts reliably.
 # Build temporary test paths so we do not modify repository files.
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 temp_dir="$(mktemp -d)"

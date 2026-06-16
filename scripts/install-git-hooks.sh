@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# BASH_SOURCE[0] is this script's own path, even if called from another directory.
 # Find the repository root relative to this script file.
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
